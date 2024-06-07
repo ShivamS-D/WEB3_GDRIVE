@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { abi } from '../../artifacts/contracts/GoogleDrive.sol/GoogleDrive.json';
+import { abi } from './GoogleDrive.json';
 import { jwt } from '../utils/jwts';
 import './App.css'; // Import the CSS file
 import { useContract } from './useContract';
