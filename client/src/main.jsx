@@ -5,6 +5,7 @@ import './index.css'
 import {Route, BrowserRouter as Router, Routes} from 'react-router-dom'
 import GDRIVE from './GDRIVE.jsx'
 import { ContractContextProvider } from './ContractContext.jsx'
+import UploadFolder from './UploadFolder.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -13,6 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <Routes>
 <Route path='/' element={<App/>}></Route>
 <Route path='/buy' element={<GDRIVE/>}></Route>
+<Route path='/uploading' element={<UploadFolder/>}></Route>
   </Routes>
     </Router>
     </ContractContextProvider>

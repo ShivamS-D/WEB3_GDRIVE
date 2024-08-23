@@ -26,32 +26,36 @@ const App = () => {
   const [whoHasUploaded,setWhoHasUpload]=useState([])
   const [isUploaded,setIsUploaded]=useState(false)
 const [isAccessGiven,setIsAccessGiven]=useState(false)
-  const initializeContract = async () => {
-    setError('');
-    try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setAddress(accounts[0]);
-      localStorage.setItem('address', accounts[0]);
+const initializeContract = async () => {
+  setError('');
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    setAddress(accounts[0]);
+    localStorage.setItem('address', accounts[0]);
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      setSigner(signer);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    
+    // Use the address directly to get the balance
+    // const balance = await signer.getBalance(accounts[0]);
+    // console.log(balance.toString());
 
-      const contract = new ethers.Contract('0xf79776877167f947dbc458059fc891cef8119ff7', abi, signer);
-      setContract(contract);
+    setSigner(signer);
 
-      setConnected(true);
-      dispatch({type:'SET_CONTRACT',payload:{contract,signer,address:accounts[0]}})
+    const contract = new ethers.Contract('0xf79776877167f947dbc458059fc891cef8119ff7', abi, signer);
+    setContract(contract);
 
-    } catch (e) {
-      setConnected(false);
-      if (e.code === 4001) {
-        setError('User rejected the request.');
-      } else {
-        setError('An error occurred while connecting to the wallet.');
-      }
+    setConnected(true);
+    dispatch({ type: 'SET_CONTRACT', payload: { contract, signer, address: accounts[0] } });
+  } catch (e) {
+    setConnected(false);
+    if (e.code === 4001) {
+      setError('User rejected the request.');
+    } else {
+      setError('An error occurred while connecting to the wallet.');
     }
-  };
+  }
+};
 
   useEffect(() => {
     if (window.ethereum) {
@@ -202,32 +206,37 @@ getWhoHasUploaded()
           <button key={1} onClick={handleDisconnect}>Disconnect</button>
           <p>{address}</p>
           <button onClick={getImages}>Get Images</button>
+          {showImg && (
+            <div>
+              <p>Your Images</p>
+            <div className="images-container">
+              {images.length === 0 ? <p>You have no images</p> : images.map((img, index) => (
+                img.image.startsWith('https') ? <img key={index} src={img.image} alt="Uploaded" /> : null
+              ))}
+              
+            </div>
+            </div>
+          )}
+          <div id='upload'>
           <label htmlFor="file-upload">Upload Your File</label>
           <input type="file" id="file-upload" onChange={e => setFile(e.target.files[0])} />
           <button onClick={uploadImg}>{!isUploaded?'Upload':'Uploading'}</button>
+          </div>
           <br />
           <div className='address'>
             <label htmlFor="file_upload">Give Access</label>
             <input type="text" onChange={e => setAccessAddr(e.target.value)} placeholder='Address' />
             <button onClick={giveAccess}>{!isAccessGiven?'Give Access':'Giving Access'}</button>
           </div>
-          <input type="text" value={addr} />
-          <button onClick={getAccessedImage}>Get Accessed Image</button>
-          {error && <p className="error">{error}</p>}
+          {/* <input type="text" value={addr} /> */}
           <select onChange={e=>{setAddr(e.target.value); console.log(e.target.value)}}><option key={address} value={address}>Select The Address Which has given Access to you</option>
   {accessBy.map((img, index) => (
     <option key={index} value={img} >{img}</option>
   ))}
 </select>
-          {showImg && (
-            <div className="images-container">
-              <p>Your Images</p>
-              {images.length === 0 ? <p>You have no images</p> : images.map((img, index) => (
-                img.image.startsWith('https') ? <img key={index} src={img.image} alt="Uploaded" /> : null
-              ))}
-              
-            </div>
-          )}
+  <button onClick={getAccessedImage}>Get Accessed Image</button>
+  {error && <p className="error">{error}</p>}
+          
           {showAccessImg && (
             <div className="images-container">
               <p>Access Images</p>
@@ -237,6 +246,7 @@ getWhoHasUploaded()
             </div>
           )}
           <br />
+          <p>You can buy the images uploaded by the addresses below</p>
           {whoHasUploaded.map(who=>(
             // <Link to={{pathname:'/buy',state:{who:"Ashutosh"}}}>{who}</Link>
             <button onClick={()=>{navigate('/buy',{state:{who}})}}>{who}</button>
