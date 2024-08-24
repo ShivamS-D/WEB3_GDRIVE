@@ -17,7 +17,7 @@ npx hardhat ignition deploy ./ignition/modules/Lock.js
 
 ## Blockchain used - Ethereum
 
-## contract address - > 0xf79776877167f947dbc458059fc891cef8119ff7
+## contract address - > 0xbc36127b0406da2bdb6139d5094071543ed13994
 ## deployed on sepolia test net
 ## To check the verified contract visit sepolia.etherscan.io and put this contract address
 

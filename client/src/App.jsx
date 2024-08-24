@@ -42,7 +42,7 @@ const initializeContract = async () => {
 
     setSigner(signer);
 
-    const contract = new ethers.Contract('0xf79776877167f947dbc458059fc891cef8119ff7', abi, signer);
+    const contract = new ethers.Contract('0xbc36127b0406da2bdb6139d5094071543ed13994', abi, signer);
     setContract(contract);
 
     setConnected(true);
